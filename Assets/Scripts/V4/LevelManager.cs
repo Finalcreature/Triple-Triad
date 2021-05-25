@@ -13,12 +13,43 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject opponentsSelectScreen;
     bool isShowing;
 
+    
+    CardSlot[,] cardSlots = new CardSlot[3, 3];
+    
+
     public void Start()
     {
-       if(SceneManager.GetActiveScene().buildIndex == 0)
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             CardCounter.rivaldeck = decks[0];
         }
+       else
+        {
+            int index = 0;
+            string num;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    num = index.ToString();
+                    cardSlots[j, i] = GameObject.Find((index + 1).ToString()).GetComponent<CardSlot>();
+                    index++; 
+                }
+            }
+        }
+    }
+
+    public CardSlot GetSlot(CardSlot cardSlot)
+    {
+        foreach(CardSlot slot in cardSlots)
+        {
+            if(cardSlot == slot)
+            {
+                return slot;
+            }
+        }
+        return null;
     }
 
     public void SetOpponent(int value)

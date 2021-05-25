@@ -12,15 +12,15 @@ public class CardSlot : MonoBehaviour, IDropHandler
     [SerializeField] Text[] ownValues;
     //static bool isSame, isPlus;
 
-    /*Plus and same works even if one of the cards is owned by the attacker
-      TODO change the code according to that*/
+   
 
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag && card == null)
         {
-            
             card = eventData.pointerDrag.GetComponent<CardAttributes>();
+           print(FindObjectOfType<LevelManager>().GetSlot(this).GetCard());
+           
 
             if(card.GetComponent<DragMechanic>().isDragable)
             {
@@ -226,6 +226,11 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 card = null;
             }
         }
+    }
+
+    CardAttributes GetCard()
+    {
+        return card;
     }
 
     private void AddCardsToPool(List<Text> storeSet, int i)

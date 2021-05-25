@@ -42,7 +42,7 @@ public class CardAttributes : MonoBehaviour, IDropHandler, IPointerDownHandler
         }
     }
 
-    void Start()
+   void Start()
     {
         
         if(FindObjectOfType<LevelManager>().GetLevel() != "Select Screen")

@@ -4327,6 +4327,11 @@ PrefabInstance:
       propertyPath: cardNum
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5453042561642761153, guid: 1456706c9eeda644986936e2269d284f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7567280349033945752, guid: 1456706c9eeda644986936e2269d284f,
         type: 3}
       propertyPath: canvas

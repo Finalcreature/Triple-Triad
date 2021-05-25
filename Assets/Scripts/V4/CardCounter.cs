@@ -10,6 +10,7 @@ public static class CardCounter
     public static int turns = 1;
     public static CardAttributes[] cards;
     public static Pack rivaldeck;
+   
 
 
     public static void SetDeck(CardAttributes[] myCards)
