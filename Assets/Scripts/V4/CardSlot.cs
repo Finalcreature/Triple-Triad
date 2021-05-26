@@ -10,19 +10,40 @@ public class CardSlot : MonoBehaviour, IDropHandler
     CardAttributes card;
     [SerializeField] Text[] rivalValues;
     [SerializeField] Text[] ownValues;
-    //static bool isSame, isPlus;
+    int x, y;
+    LevelManager levelManager;
+    CardAttributes lCard, rCard, uCard, dCard;
+    List<CardAttributes> sameValue = new List<CardAttributes>();
+    List<CardAttributes> plusValues = new List<CardAttributes>();
+    List<int> plusIndex = new List<int>();
 
-   
+    private void Start()
+    {
+        levelManager = FindObjectOfType<LevelManager>();
+    }
+
+
 
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag && card == null)
         {
             card = eventData.pointerDrag.GetComponent<CardAttributes>();
-           print(FindObjectOfType<LevelManager>().GetSlot(this).GetCard());
-           
+            levelManager.GetSlot(this, out x, out y);
 
-            if(card.GetComponent<DragMechanic>().isDragable)
+
+
+            //Method
+            //print(levelManager.cardSlots[x + 1, y]);
+            //print(levelManager.cardSlots[x - 1, y]);
+            //print(levelManager.cardSlots[x , y + 1]);
+            //print(levelManager.cardSlots[x , y - 1]);
+
+
+
+
+
+            if (card.GetComponent<DragMechanic>().isDragable)
             {
                 eventData.pointerDrag.GetComponent<DragMechanic>().isInplace = true;
                 card.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
@@ -34,196 +55,165 @@ public class CardSlot : MonoBehaviour, IDropHandler
                     allValues[i].CrossFadeAlpha(0, 0, false);
                 }
 
-                List<Text> storeSet = new List<Text>();
 
-                for (int i = 0; i < ownValues.Length; i++)
+
+                if (y != 0 && levelManager.cardSlots[x, y - 1].card)
                 {
-                    
-                        
-                    if (rivalValues[i].text != "")
-                    { 
-                        CardAttributes rival = rivalValues[i].gameObject.GetComponentInParent<CardSlot>().card;
-
-                        if(LevelManager.isSame || LevelManager.isPlus)
-                        {
-                            AddCardsToPool(storeSet, i);
-                            if (int.Parse(ownValues[i].text) > int.Parse(rivalValues[i].text))
-                            {
-                                card.Owned(rival, card);
-                            }
-                        }
-
-                        else if (rival.owner != card.owner)
-                        {
-                            AddCardsToPool(storeSet, i);
-                            if (int.Parse(ownValues[i].text) > int.Parse(rivalValues[i].text))
-                            {
-                                card.Owned(rival);
-                            }
-                        }
-                    }
-                        
-                        
-                }
-                
-
-                if (LevelManager.isSame)
-                {                   
-                    if (storeSet.Count == 4)
+                    dCard = levelManager.cardSlots[x, y - 1].card;
+                    if (GetCardValue(2) > dCard.GetNum(0))
                     {
-                        if (storeSet[0].text == storeSet[1].text && storeSet[2].text == storeSet[3].text)
-                        {
-                            card.Owned(rivalValues[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(rivalValues[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
+                        card.Owned(dCard, card);
                     }
-
-                    else if (storeSet.Count == 6)
+                    else if (GetCardValue(2) == dCard.GetNum(0))
                     {
-                        if (storeSet[0].text == storeSet[1].text)
-                        {
-                            if (storeSet[2].text == storeSet[3].text && storeSet[4].text == storeSet[5].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
+                        sameValue.Add(dCard);
 
-                            }
-                            else if (storeSet[2].text == storeSet[3].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if (storeSet[4].text == storeSet[5].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                        }
-
-                        else if (storeSet[2].text == storeSet[3].text && storeSet[4].text == storeSet[5].text)
-                        {
-                            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
-                    }
-
-                    else if (storeSet.Count == 8)
-                    {
-                        if (storeSet[0].text == storeSet[1].text)
-                        {
-                            if (storeSet[2].text == storeSet[3].text && storeSet[4].text == storeSet[5].text
-                                && storeSet[6].text == storeSet[7].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[6].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if (storeSet[2].text == storeSet[3].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if (storeSet[4].text == storeSet[5].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if (storeSet[6].text == storeSet[7].text)
-                            {
-                                card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[6].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                        }
-                        
-                        else if (storeSet[2].text == storeSet[3].text)
-                        {
-                            if(storeSet[4].text == storeSet[5].text && storeSet[6].text == storeSet[7].text)
-                            {
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[6].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if(storeSet[4].text == storeSet[5].text)
-                            {
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                            else if(storeSet[6].text == storeSet[7].text)
-                            {
-                                card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                                card.Owned(storeSet[6].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            }
-                        }
-                        
-                        else if(storeSet[4].text == storeSet[5].text && storeSet[6].text == storeSet[7].text)
-                        {
-                            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[6].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
                     }
                 }
-
-                if(LevelManager.isPlus)
+                if (x != 0 && levelManager.cardSlots[x - 1, y].card)
                 {
-                    
-                    if (storeSet.Count == 4)
+                    lCard = levelManager.cardSlots[x - 1, y].card;
+                    if (GetCardValue(3) > lCard.GetNum(1))
                     {
-                        if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text))
-                        {
-                            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
+                        card.Owned(lCard, card);
                     }
-
-                    else if (storeSet.Count == 6)
+                    else if (GetCardValue(3) == lCard.GetNum(1))
                     {
-                        if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text))
-                        {
-                            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
-                        else if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[4].text + storeSet[5].text))
-                        {
-                            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
-                        else if (int.Parse(storeSet[4].text + storeSet[5].text) == int.Parse(storeSet[2].text + storeSet[3].text))
-                        {
-                            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
-                        else if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text)
-                                 && int.Parse(storeSet[4].text + storeSet[5].text) == int.Parse(storeSet[2].text + storeSet[3].text))
-                        {
-                            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
-                            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
-                        }
+                        sameValue.Add(lCard);
+
                     }
                 }
 
-                CardCounter.turns++;
-                if(CardCounter.turns > 9)
+                if (x != 2 && levelManager.cardSlots[x + 1, y].card)
                 {
-                    if(CardCounter.playerCards > CardCounter.rivalCards)
+                    rCard = levelManager.cardSlots[x + 1, y].card;
+                    if (GetCardValue(1) > rCard.GetNum(3))
                     {
-                        print("Player win");
+                        card.Owned(levelManager.cardSlots[x + 1, y].card, card);
                     }
-                    else if(CardCounter.playerCards < CardCounter.rivalCards)
+                    else if (GetCardValue(1) == rCard.GetNum(3))
                     {
-                        print("Player lose");
-                    }
-                    else
-                    {
-                        print("Draw");
+                        sameValue.Add(rCard);
+
                     }
                 }
-            }
-            else
-            {
-                card = null;
+
+                if (y != 2 && levelManager.cardSlots[x, y + 1].card)
+                {
+                    uCard = levelManager.cardSlots[x, y + 1].card;
+                    if (GetCardValue(0) > uCard.GetNum(2))
+                    {
+                        card.Owned(uCard, card);
+                    }
+                    else if (GetCardValue(0) == uCard.GetNum(2))
+                    {
+                        sameValue.Add(uCard);
+
+                    }
+                }
+
+
+                if (LevelManager.isSame && sameValue.Count > 1)
+                {
+                    for (int i = 0; i < sameValue.Count; i++)
+                    {
+                        card.Owned(sameValue[i], card);
+                    }
+                }
+
+
+                if (LevelManager.isPlus)
+                {
+                    if(GetCardValue(2) + dCard.GetNum(0) == GetCardValue(3) + lCard.GetNum(1))
+                    {
+                        card.Owned(dCard, card);
+                        card.Owned(lCard, card);
+                    }
+                    if(GetCardValue(2) + dCard.GetNum(0) == GetCardValue(1) + rCard.GetNum(3))
+                    {
+                        card.Owned(dCard, card);
+                        card.Owned(rCard, card);
+                    }
+                    if (GetCardValue(2) + dCard.GetNum(0) == GetCardValue(0) + uCard.GetNum(2))
+                    {
+                        card.Owned(dCard, card);
+                        card.Owned(uCard, card);
+                    }
+                    if (GetCardValue(3) + lCard.GetNum(1) == GetCardValue(1) + rCard.GetNum(3))
+                    {
+                        card.Owned(lCard, card);
+                        card.Owned(rCard, card);
+                    }
+                    if (GetCardValue(3) + lCard.GetNum(1) == GetCardValue(0) + uCard.GetNum(2))
+                    {
+                        card.Owned(lCard, card);
+                        card.Owned(uCard, card);
+                    }
+                    if (GetCardValue(0) + uCard.GetNum(2) == GetCardValue(1) + rCard.GetNum(3))
+                    {
+                        card.Owned(uCard, card);
+                        card.Owned(rCard, card);
+                    }
+
+
+
+                    //    if (storeSet.Count == 4)
+                    //    {
+                    //        if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text))
+                    //        {
+                    //            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //        }
+                    //    }
+
+                    //    else if (storeSet.Count == 6)
+                    //    {
+                    //        if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text))
+                    //        {
+                    //            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //        }
+                    //        else if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[4].text + storeSet[5].text))
+                    //        {
+                    //            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //        }
+                    //        else if (int.Parse(storeSet[4].text + storeSet[5].text) == int.Parse(storeSet[2].text + storeSet[3].text))
+                    //        {
+                    //            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //        }
+                    //        else if (int.Parse(storeSet[0].text + storeSet[1].text) == int.Parse(storeSet[2].text + storeSet[3].text)
+                    //                 && int.Parse(storeSet[4].text + storeSet[5].text) == int.Parse(storeSet[2].text + storeSet[3].text))
+                    //        {
+                    //            card.Owned(storeSet[0].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[2].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //            card.Owned(storeSet[4].gameObject.GetComponentInParent<CardSlot>().card, card);
+                    //        }
+                    //    }
+                    //}
+
+                    CardCounter.turns++;
+                    if (CardCounter.turns > 9)
+                    {
+                        if (CardCounter.playerCards > CardCounter.rivalCards)
+                        {
+                            print("Player win");
+                        }
+                        else if (CardCounter.playerCards < CardCounter.rivalCards)
+                        {
+                            print("Player lose");
+                        }
+                        else
+                        {
+                            print("Draw");
+                        }
+                    }
+                }
+                else
+                {
+                    card = null;
+                }
             }
         }
     }
@@ -233,11 +223,16 @@ public class CardSlot : MonoBehaviour, IDropHandler
         return card;
     }
 
-    private void AddCardsToPool(List<Text> storeSet, int i)
+    public int GetCardValue(int value)
     {
-        storeSet.Add(rivalValues[i]);
-        storeSet.Add(ownValues[i]);
+        return card.GetCard().GetNums(value);
     }
+
+    //private void AddCardsToPool(List<Text> storeSet, int i)
+    //{
+    //    storeSet.Add(rivalValues[i]);
+    //    storeSet.Add(ownValues[i]);
+    //}
 
 
 }

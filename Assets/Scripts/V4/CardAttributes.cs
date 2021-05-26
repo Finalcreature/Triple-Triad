@@ -155,6 +155,11 @@ public class CardAttributes : MonoBehaviour, IDropHandler, IPointerDownHandler
         return card.GetNums();
     }
 
+    public int GetNum(int value)
+    {
+        return card.GetNums(value);
+    }
+
     public void ShowCover()
     {
         bool activate;

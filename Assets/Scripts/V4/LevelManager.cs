@@ -13,9 +13,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject opponentsSelectScreen;
     bool isShowing;
 
-    
-    CardSlot[,] cardSlots = new CardSlot[3, 3];
-    
+
+    public CardSlot[,] cardSlots = new CardSlot[3, 3];
+
 
     public void Start()
     {
@@ -51,6 +51,26 @@ public class LevelManager : MonoBehaviour
         }
         return null;
     }
+
+    public void GetSlot(CardSlot cardSlot,out int num, out int num2)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (cardSlots[j, i] == cardSlot)
+                {
+                    num = j;
+                    num2 = i;
+                    return;
+                }
+               
+            }
+        }
+        throw new System.Exception("Wrong para");
+    }
+
+    
 
     public void SetOpponent(int value)
     {
