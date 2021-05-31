@@ -13,19 +13,26 @@ public class DragMechanic : MonoBehaviour, IPointerDownHandler, IDragHandler, IB
     public bool isDragable = true;
     public Vector3 startPos;
     GameObject flowText;
+    LevelManager levelManager;
 
 
     private void Awake()
     {
+        levelManager = FindObjectOfType<LevelManager>();
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         flowText = GameObject.Find("Flow Text");
-    }
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        canvasGroup.blocksRaycasts = false;
+        
     }
 
+
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        canvasGroup.blocksRaycasts = false;   //this will allow the mouse ray to hit the slot behind it
+    }
+
+    //Move the card if it's their turn
     public void OnDrag(PointerEventData eventData)
     {
         if(CardCounter.isPlayerTurn && GetComponent<CardAttributes>().owner == CardAttributes.Owner.Player1
@@ -40,10 +47,10 @@ public class DragMechanic : MonoBehaviour, IPointerDownHandler, IDragHandler, IB
         }
     }
 
+
     public void OnEndDrag(PointerEventData eventData)
     {
-        
-
+        //Check if the card was placed in a valid slot 
         if(!isInplace)
         {
             canvasGroup.blocksRaycasts = true;
@@ -55,37 +62,26 @@ public class DragMechanic : MonoBehaviour, IPointerDownHandler, IDragHandler, IB
             if(CardCounter.isPlayerTurn)
             {
                 flowText.GetComponent<Animator>().SetTrigger("PlayerTurn");
-                flowText.GetComponent<Text>().text = "Blue Turn";
+                flowText.GetComponent<Image>().sprite = levelManager.flowText[0];
             }
             else
             {
                 flowText.GetComponent<Animator>().SetTrigger("RivalTurn");
-                flowText.GetComponent<Text>().text = "Red Turn";
+                flowText.GetComponent<Image>().sprite = levelManager.flowText[1];
             }
-            
-            //Impelent anime
+            StartCoroutine(DisableCursor(2f));
 
-            if(CardCounter.isPlayerTurn)
-            {
-                foreach(CardAttributes card in FindObjectsOfType<CardAttributes>())
-                {
-                    if(card.owner == CardAttributes.Owner.Player1 && !card.GetComponent<DragMechanic>().isInplace)
-                    {
-                        card.GetComponent<DragMechanic>().canvasGroup.blocksRaycasts = true;
-                    }
-                }
-            }
-            else
-            {
-                foreach (CardAttributes card in FindObjectsOfType<CardAttributes>())
-                {
-                    if (card.owner == CardAttributes.Owner.Player2 && !card.GetComponent<DragMechanic>().isInplace)
-                    {
-                        card.GetComponent<DragMechanic>().canvasGroup.blocksRaycasts = true;
-                    }
-                }
-            }
+
         }
+    }
+
+    IEnumerator DisableCursor(float seconds)
+    {
+        Cursor.visible = !Cursor.visible;
+        Cursor.lockState = CursorLockMode.Locked;
+        yield return new WaitForSeconds(seconds);
+        Cursor.visible = !Cursor.visible;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void OnPointerDown(PointerEventData eventData)
