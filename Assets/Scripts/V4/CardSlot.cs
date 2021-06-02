@@ -37,9 +37,14 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 int[] values = card.GetNums();
       
                 Comparison();
-                SameRule();
+                StartCoroutine(SameRule());
                 PlusRule();
-                CheckResult();
+                levelManager.ChangeTurn();
+                CardCounter.turns++;
+                if (CardCounter.turns > 9)
+                {
+                    levelManager.FinishGame();
+                }
             }
             else //Remove card to prevent overlap
             {
@@ -117,24 +122,21 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 { 
                     if (GetCardValue(2) + dCard.GetNum(0) == GetCardValue(3) + lCard.GetNum(1))
                     {
-                        card.Owned(dCard, card);
-                        card.Owned(lCard, card);
+                        levelManager.PlusAnim(dCard, lCard, card);
                     }
                 }
                 if(rCard)
                 {
                     if (GetCardValue(2) + dCard.GetNum(0) == GetCardValue(1) + rCard.GetNum(3))
                     {
-                        card.Owned(dCard, card);
-                        card.Owned(rCard, card);
+                        levelManager.PlusAnim(dCard, rCard, card);
                     }
                 }
                 if(uCard)
                 {
                     if (GetCardValue(2) + dCard.GetNum(0) == GetCardValue(0) + uCard.GetNum(2))
                     {
-                        card.Owned(dCard, card);
-                        card.Owned(uCard, card);
+                        levelManager.PlusAnim(dCard, uCard, card);
                     }
                 }
             }
@@ -143,17 +145,15 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 if(rCard)
                 {
                     if (GetCardValue(3) + lCard.GetNum(1) == GetCardValue(1) + rCard.GetNum(3))
-                    {
-                        card.Owned(lCard, card);
-                        card.Owned(rCard, card);
+                    {;
+                        levelManager.PlusAnim(lCard, rCard, card);
                     }
                 }
                 if(uCard)
                 {
                     if (GetCardValue(3) + lCard.GetNum(1) == GetCardValue(0) + uCard.GetNum(2))
                     {
-                        card.Owned(lCard, card);
-                        card.Owned(uCard, card);
+                        levelManager.PlusAnim(lCard, uCard, card);
                     }
                 }
             }
@@ -163,8 +163,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 {
                     if (GetCardValue(0) + uCard.GetNum(2) == GetCardValue(1) + rCard.GetNum(3))
                     {
-                        card.Owned(uCard, card);
-                        card.Owned(rCard, card);
+                        levelManager.PlusAnim(uCard, rCard, card);
                     }
                 }
             }
@@ -174,21 +173,23 @@ public class CardSlot : MonoBehaviour, IDropHandler
 
         }
     }
-    private void SameRule()
+    IEnumerator SameRule()
     {
         if (LevelManager.isSame && sameValue.Count > 1)
         {
+            levelManager.SameAnim();
+            yield return new WaitForSeconds(2);
             for (int i = 0; i < sameValue.Count; i++)
             {
                 card.Owned(sameValue[i], card);
             }
         }
     }
-    private static void CheckResult()
+    /*private static void CheckResult()
     {
-        CardCounter.turns++;
         if (CardCounter.turns > 9)
         {
+            
             if (CardCounter.playerCards > CardCounter.rivalCards)
             {
                 print("Player win");
@@ -202,7 +203,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
                 print("Draw");
             }
         }
-    }
+    }*/
     public int GetCardValue(int value)
     {
         return card.GetCard().GetNums(value);

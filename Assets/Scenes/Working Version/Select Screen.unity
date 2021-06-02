@@ -678,8 +678,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 39, y: 489}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchoredPosition: {x: -55.3, y: 489}
+  m_SizeDelta: {x: 93.972916, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &125184277
 MonoBehaviour:
@@ -918,15 +918,15 @@ RectTransform:
   m_GameObject: {fileID: 251053179}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.05594107, y: 0.05594107, z: 0.05594107}
   m_Children: []
   m_Father: {fileID: 1324080073}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: -32, y: 0.7}
+  m_SizeDelta: {x: 687.8247, y: 314.7906}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &251053181
 MonoBehaviour:
@@ -949,11 +949,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 287
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2564,15 +2564,15 @@ RectTransform:
   m_GameObject: {fileID: 997173262}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.08375226, y: 0.08375226, z: 0.08375226}
   m_Children: []
   m_Father: {fileID: 125184276}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9, y: -0.5}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchoredPosition: {x: -2.8, y: 0.10000038}
+  m_SizeDelta: {x: 297.19235, y: 211.21404}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &997173264
 MonoBehaviour:
@@ -2595,11 +2595,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 199
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 7
+    m_MaxSize: 199
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4403,10 +4403,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScaleFactor: 0.48
+  m_ReferenceResolution: {x: 1237, y: 2379}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.364
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -5391,6 +5391,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec6496bb92aad234ca2d0ea9b51feac2, type: 2}
   - {fileID: 11400000, guid: 154bbd0ec9f317b44bd6c2eee6eef35f, type: 2}
   opponentsSelectScreen: {fileID: 1314257847}
+  flowTextSprites: []
+  defaultCards: []
 --- !u!1 &1883222837
 GameObject:
   m_ObjectHideFlags: 0

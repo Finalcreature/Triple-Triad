@@ -12,7 +12,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Pack[] decks; //Stored decks (scriptable objects)
     [SerializeField] GameObject opponentsSelectScreen; //Panel
     bool isShowing; //Panel is showing
-    public Sprite[] flowText;
+
+
+
+    public Sprite[] flowTextSprites;
+    GameObject flowText;
+    Image text;
+    Animator animator;
 
     [SerializeField] GameObject[] defaultCards;
 
@@ -49,13 +55,18 @@ public class LevelManager : MonoBehaviour
                 }
             }
 
-            GameObject.Find("Flow Text").GetComponent<Animator>().SetTrigger("GameStart");
-            GameObject.Find("Flow Text").GetComponent<Image>().sprite = flowText[2];
+            flowText = GameObject.Find("Flow Text");
+            text = flowText.GetComponent<Image>();
+            animator = flowText.GetComponent<Animator>();
+
+            animator.SetTrigger("GameStart");
+            text.sprite = flowTextSprites[0];
 
             StartCoroutine("DrawCards");
         }
     }
 
+    //Choose who goes first
     IEnumerator DrawCards()
     {
         Cursor.visible = !Cursor.visible;
@@ -192,7 +203,9 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(0);
         isPlus = false;
         isSame = false;
-        CardCounter.turns = 0;
+        CardCounter.turns = 1;
+        CardCounter.playerCards = 5;
+        CardCounter.rivalCards = 5;
     }
 
     public string GetLevel()
@@ -204,4 +217,85 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    public void FinishGame()
+    {
+        flowText.transform.position = Vector3.zero;
+        if (CardCounter.playerCards > CardCounter.rivalCards)
+        {         
+            text.sprite = flowTextSprites[3];
+            
+        }
+        else if (CardCounter.playerCards < CardCounter.rivalCards)
+        {
+            text.sprite = flowTextSprites[4];
+        }
+        else
+        {
+            text.sprite = flowTextSprites[5];
+        }
+        animator.SetTrigger("EndGame");
+    }
+
+    public void PlusAnim(CardAttributes card1, CardAttributes card2, CardAttributes attackerCard)
+    {
+        animator.SetTrigger("Plus");
+        StartCoroutine(Plus(card1, card2, attackerCard));
+    }
+
+
+    IEnumerator Plus(CardAttributes card1, CardAttributes card2, CardAttributes attackerCard)
+    {
+        yield return new WaitForSeconds(2);
+        attackerCard.Owned(card1, attackerCard);
+        attackerCard.Owned(card2, attackerCard);
+    }
+
+    public void SameAnim()
+    {
+        animator.SetTrigger("Same");
+    }
+
+    public IEnumerator ChangeTurn()
+    {
+        yield return null;
+        //CardCounter.isPlayerTurn = !CardCowwerunter.isPlayerTurn;
+        if (CardCounter.isPlayerTurn)
+        {
+            text.sprite = flowTextSprites[1];
+            animator.SetTrigger("PlayerTurn");
+        }
+        else
+        {
+            text.sprite = flowTextSprites[2];
+            animator.SetTrigger("RivalTurn");
+        }
+    }
+    //Debugging
+
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.Alpha1))
+    //    {
+    //        flowText.transform.position = Vector3.zero;
+    //        text.sprite = flowTextSprites[3];
+    //        animator.SetTrigger("EndGame"); 
+    //    }
+
+    //    if (Input.GetKeyDown(KeyCode.Alpha2))
+    //    {
+    //        flowText.transform.position = Vector3.zero;
+    //        text.sprite = flowTextSprites[4];
+    //        animator.SetTrigger("EndGame");
+    //    }
+
+    //    if (Input.GetKeyDown(KeyCode.Alpha3))
+    //    {
+    //        flowText.transform.position = Vector3.zero;
+    //        text.sprite = flowTextSprites[5];
+    //        animator.SetTrigger("EndGame");
+    //    }
+
+    //}
+
 }

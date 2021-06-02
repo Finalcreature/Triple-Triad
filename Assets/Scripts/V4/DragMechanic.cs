@@ -56,19 +56,9 @@ public class DragMechanic : MonoBehaviour, IPointerDownHandler, IDragHandler, IB
             canvasGroup.blocksRaycasts = true;
             transform.position = startPos;
         }
-        else
+        else if(CardCounter.turns <= 9)
         {
-            CardCounter.isPlayerTurn = !CardCounter.isPlayerTurn;
-            if(CardCounter.isPlayerTurn)
-            {
-                flowText.GetComponent<Animator>().SetTrigger("PlayerTurn");
-                flowText.GetComponent<Image>().sprite = levelManager.flowText[0];
-            }
-            else
-            {
-                flowText.GetComponent<Animator>().SetTrigger("RivalTurn");
-                flowText.GetComponent<Image>().sprite = levelManager.flowText[1];
-            }
+            
             StartCoroutine(DisableCursor(2f));
 
 
